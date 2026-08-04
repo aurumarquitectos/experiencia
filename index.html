@@ -1483,7 +1483,11 @@ function aplicarCatalogo(cat){
     });
     if(typeof d.habitable==="boolean")e.hab=d.habitable;
   }
-  const cot=cat.cotizacion_2026||{},p=cot.precios_mxn_por_m2||{},m=cot.multiplicador_lujo||{};
+  const cot=cat.cotizacion||cat.cotizacion_2026||{},p=cot.precios_mxn_por_m2||{},m=cot.multiplicador_lujo||{};
+  /* El precio ya no depende de que alguien note el año en el nombre de la llave:
+     si caducó, se avisa en vez de seguir cotizando en silencio. */
+  const cotCaducada = cot.vigente_hasta ? (new Date() > new Date(cot.vigente_hasta+'T23:59:59')) : false;
+  if (cotCaducada) console.warn('[aurum] La tabla de precios venció el '+cot.vigente_hasta+'. Actualízala antes de cotizar.');
   if(num(p.llave_en_mano))CAT.precios.llave=p.llave_en_mano;
   if(num(p.proyecto_ejecutivo))CAT.precios.ejecutivo=p.proyecto_ejecutivo;
   if(num(p.diseno_arquitectonico))CAT.precios.diseno=p.diseno_arquitectonico;

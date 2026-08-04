@@ -725,6 +725,32 @@
    "cochera"
   ]
  },
+ "cotizacion": {
+  "precios_mxn_por_m2": {
+   "llave_en_mano": 18500,
+   "proyecto_ejecutivo": 1350,
+   "diseno_arquitectonico": 850
+  },
+  "multiplicador_lujo": {
+   "Modesta": 0.85,
+   "Acogedora": 0.85,
+   "Casual": 1.0,
+   "sin_datos": 1.0,
+   "Elegante": 1.2,
+   "Premium": 1.2,
+   "Alto": 1.2,
+   "Vanguardista": 1.2,
+   "Monumental": 1.4,
+   "Lujo": 1.4,
+   "Luxury": 1.4,
+   "Glamoroso": 1.4
+  },
+  "base_de_cotizacion": "m² habitables + 12% de circulación. Los espacios con habitable=false se muestran en el brief pero NO entran en la multiplicación.",
+  "circulacion": 0.12,
+  "vigente_desde": "2026-01-01",
+  "vigente_hasta": "2026-12-31",
+  "_nota_vigencia": "Al pasar vigente_hasta, la app avisa que el precio caducó en vez de seguir cotizando en silencio. Actualiza precios y mueve las dos fechas."
+ },
  "cotizacion_2026": {
   "precios_mxn_por_m2": {
    "llave_en_mano": 18500,
@@ -746,7 +772,10 @@
    "Glamoroso": 1.4
   },
   "base_de_cotizacion": "m² habitables + 12% de circulación. Los espacios con habitable=false se muestran en el brief pero NO entran en la multiplicación.",
-  "circulacion": 0.12
+  "circulacion": 0.12,
+  "vigente_desde": "2026-01-01",
+  "vigente_hasta": "2026-12-31",
+  "_nota_vigencia": "Al pasar vigente_hasta, la app avisa que el precio caducó en vez de seguir cotizando en silencio. Actualiza precios y mueve las dos fechas."
  },
  "app": {
   "banda_estimacion_baja": 0.95,
