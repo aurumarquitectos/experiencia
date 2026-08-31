@@ -62,13 +62,15 @@
   .card .visual{height:150px;}
   .card:focus-visible{outline:2px solid var(--oro);outline-offset:2px;}
   .estilo-cue{display:none;}
+  .promesa{font-size:14px;color:var(--carbon);margin:-22px 0 26px;padding-left:13px;border-left:2px solid var(--oro);line-height:1.45;}
   @media(max-width:600px){
     .pantalla[data-p="1"] .kicker{margin-bottom:8px;}
     .pantalla[data-p="1"] h2{font-size:20px;margin-bottom:8px;}
-    .pantalla[data-p="1"] .sub{margin-bottom:8px;}
-    #estilos{grid-template-columns:repeat(2,1fr);gap:12px;}
-    #estilos .visual{height:124px;}
-    #estilos .body{padding:11px 12px 13px;}
+    .pantalla[data-p="1"] .sub{margin-bottom:6px;}
+    .promesa{font-size:11.5px;margin:-4px 0 8px;padding-left:9px;}
+    #estilos{grid-template-columns:repeat(2,1fr);gap:10px;}
+    #estilos .visual{height:120px;}
+    #estilos .body{padding:9px 12px 11px;}
     #estilos .body h3{font-size:14.5px;margin-bottom:2px;}
     #estilos .body p{font-size:11px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
     .estilo-cue{display:block;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;color:var(--piedra);margin:-2px 0 10px;}
@@ -313,9 +315,10 @@
     <div class="kicker" data-txt="p1_kicker">01 · Tu estilo · gratis, 90 seg</div>
     <h2 data-txt="p1_titulo">¿Cuál de estas fachadas se siente más <em>tuya</em>?</h2>
     <p class="sub" data-txt="p1_sub">No pienses, siente. Elige una para empezar.</p>
+    <p class="promesa" data-txt="p1_promesa">Al terminar ves los metros que tu residencia necesita · 90 segundos, gratis.</p>
     <div class="estilo-cue" aria-hidden="true">6 estilos · desliza para verlas ↓</div>
     <div class="grid g3" id="estilos"></div>
-    <p class="candado" data-txt="p0_prueba" style="margin-top:16px;text-align:center;">Decenas de familias ya dieron forma a su residencia con este proceso.</p>
+    <p class="candado" data-txt="p0_prueba" style="margin-top:16px;text-align:center;">Diseñamos residencias en Hermosillo desde 2011.</p>
     <p class="candado" style="margin-top:6px;text-align:center;"><a data-txt="p0_estudio" href="https://aurumarquitectos.github.io/?utm_source=quiz&amp;utm_medium=web&amp;utm_campaign=perfil_de_vida" target="_blank" rel="noopener" style="color:var(--oro);">Conoce el estudio →</a></p>
   </section>
 
@@ -465,7 +468,7 @@
         <p class="nota" style="margin-top:10px;" data-txt="r3_post_agenda">¿Listo? Revisa tu correo: la invitación con tu enlace de videollamada ya va en camino — y mañana te llega tu estimado revisado.</p>
         <p class="nota" style="margin-top:6px;" data-txt="r2_reaseguro">Videollamada de 30 min · sin compromiso · puedes reagendar. Recibirás la invitación con el enlace de la videollamada en tu correo.</p>
         <p class="nota" style="margin-top:6px;" data-txt="sesion_nota">Agenda limitada: abrimos pocas sesiones por semana para darle a cada proyecto la atención que merece.</p>
-        <p class="candado" data-txt="r2_prueba">Decenas de familias ya dieron forma a su residencia con este proceso.</p>
+        <p class="candado" data-txt="r2_prueba">Diseñamos residencias en Hermosillo desde 2011.</p>
       </div>
     </div>
   </section>
@@ -534,12 +537,13 @@ const TEXTOS = {
   p0_titulo:"Diseña la casa que <em>no pasa de moda</em>.",
   p0_sub3:"En 90 segundos: eliges con un click y ves tus metros aproximados al instante. Tu rango de inversión llega a tu correo.",
   p0_btn:"Diseñar mi próxima residencia →",
-  p0_prueba:"Decenas de familias ya dieron forma a su residencia con este proceso.",
+  p0_prueba:"Diseñamos residencias en Hermosillo desde 2011.",
   p0_micro:"Gratis y sin compromiso · lo revisa un arquitecto, no un algoritmo.",
 
   p1_kicker:"01 · Tu estilo",
   p1_titulo:"¿Cuál de estas fachadas se siente más <em>tuya</em>?",
-  p1_sub:"No pienses, siente. Elige una.",
+  p1_sub:"No pienses, siente. Elige una para empezar.",
+  p1_promesa:"Al terminar ves los metros que tu residencia necesita · 90 segundos, gratis.",
   p2_kicker:"02 · La sensación",
   p2_titulo:"Al llegar a casa, ¿cómo quieres <em>sentirte</em>?",
   p2_sub:"Elige hasta 3.", p2_btn:"Continuar →",
@@ -629,17 +633,17 @@ const TEXTOS = {
   agenda_p3:"Recibes al instante la invitación con el enlace de tu videollamada.",
   sticky_btn:"Elegir mi horario ↓",
   sesion_nota:"Agenda limitada: abrimos pocas sesiones por semana para darle a cada proyecto la atención que merece.",
-  r2_prueba:"Decenas de familias ya dieron forma a su residencia con este proceso.",
+  r2_prueba:"Diseñamos residencias en Hermosillo desde 2011.",
 
   lb_lab_residencia:"Tu residencia", lb_lab_recamaras:"Recámaras",
   lb_esp_tpl:"{n} espacios",
 
-  estilo_1_nombre:"", estilo_1_desc:"Contemporáneo mexicano: celosía, patio interior y líneas minimalistas.",
-  estilo_2_nombre:"", estilo_2_desc:"Contemporáneo minimalista: volúmenes definidos, líneas limpias y calidez en materiales.",
-  estilo_3_nombre:"", estilo_3_desc:"Minimalismo cálido y horizontal: mármol, vegetación y una paleta monocromática.",
-  estilo_4_nombre:"", estilo_4_desc:"Contemporáneo mediterráneo: texturas pétreas, madera entretejida y calidez, con sala frontal exterior integrada.",
-  estilo_5_nombre:"", estilo_5_desc:"Minimalista colonial de hacienda: zaguán y porche envolvente con arcadas que enlazan interior y exterior.",
-  estilo_6_nombre:"", estilo_6_desc:"Transicional mexicano: líneas limpias y volúmenes contemporáneos con acentos tradicionales, teja de barro y calidez en materiales.",
+  estilo_1_nombre:"", estilo_1_desc:"Celosía y patio interior: contemporáneo mexicano de líneas limpias.",
+  estilo_2_nombre:"", estilo_2_desc:"Volúmenes definidos y materiales cálidos: minimalismo contemporáneo.",
+  estilo_3_nombre:"", estilo_3_desc:"Horizontal y envolvente: mármol, vegetación y un mismo tono en toda la casa.",
+  estilo_4_nombre:"", estilo_4_desc:"Piedra y madera tejida: mediterráneo contemporáneo, con una sala al frente que se vive al aire libre.",
+  estilo_5_nombre:"", estilo_5_desc:"Zaguán y arcadas: hacienda colonial de líneas limpias, con el porche envolviendo la casa.",
+  estilo_6_nombre:"", estilo_6_desc:"Teja de barro sobre volúmenes nuevos: lo tradicional mexicano en clave contemporánea.",
 
   sensacion_1:"Paz", sensacion_2:"Orgullo", sensacion_3:"Calidez",
   sensacion_4:"Asombro", sensacion_5:"Libertad", sensacion_6:"Intimidad",
@@ -729,12 +733,12 @@ const S = {
 /* id/imagen/map son LÓGICA (no se editan desde el Sheet); el nombre (n) y la
    descripción (d) se sobreescriben con TEXTOS en aplicarTextos(). */
 const ESTILOS = [
-  {id:"contemporaneo",n:"",d:"Contemporáneo mexicano: celosía, patio interior y líneas minimalistas.",v:"v1"},
-  {id:"moderno_calido",n:"",d:"Contemporáneo minimalista: volúmenes definidos, líneas limpias y calidez en materiales.",v:"v2"},
-  {id:"minimalista",n:"",d:"Minimalismo cálido y horizontal: mármol, vegetación y una paleta monocromática.",v:"v3"},
-  {id:"mediterraneo",n:"",d:"Contemporáneo mediterráneo: texturas pétreas, madera entretejida y calidez, con sala frontal exterior integrada.",v:"v4"},
-  {id:"industrial",n:"",d:"Minimalista colonial de hacienda: zaguán y porche envolvente con arcadas que enlazan interior y exterior.",v:"v5"},
-  {id:"clasico",n:"",d:"Transicional mexicano: líneas limpias y volúmenes contemporáneos con acentos tradicionales, teja de barro y calidez en materiales.",v:"v6"}
+  {id:"contemporaneo",n:"",d:"Celosía y patio interior: contemporáneo mexicano de líneas limpias.",v:"v1"},
+  {id:"moderno_calido",n:"",d:"Volúmenes definidos y materiales cálidos: minimalismo contemporáneo.",v:"v2"},
+  {id:"minimalista",n:"",d:"Horizontal y envolvente: mármol, vegetación y un mismo tono en toda la casa.",v:"v3"},
+  {id:"mediterraneo",n:"",d:"Piedra y madera tejida: mediterráneo contemporáneo, con una sala al frente que se vive al aire libre.",v:"v4"},
+  {id:"industrial",n:"",d:"Zaguán y arcadas: hacienda colonial de líneas limpias, con el porche envolviendo la casa.",v:"v5"},
+  {id:"clasico",n:"",d:"Teja de barro sobre volúmenes nuevos: lo tradicional mexicano en clave contemporánea.",v:"v6"}
 ];
 const SENSACIONES = ["Paz","Orgullo","Calidez","Asombro","Libertad","Intimidad","Grandeza","Frescura"];
 /* id ESTABLE por momento: el nombre (TEXTOS WEB) y el map (MOMENTOS WEB) se
