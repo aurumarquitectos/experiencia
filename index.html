@@ -62,6 +62,18 @@
   .card .visual{height:150px;}
   .card:focus-visible{outline:2px solid var(--oro);outline-offset:2px;}
   .estilo-cue{display:none;}
+  /* Chips con palabra de apoyo (decision 3b) */
+  .chip{flex-direction:column;gap:2px;line-height:1.25;padding:9px 18px;}
+  .chip .chip-n{font-size:13px;letter-spacing:.5px;}
+  .chip .chip-a{font-size:10.5px;letter-spacing:.2px;color:var(--piedra);text-transform:none;}
+  .chip.sel .chip-a{color:#cdbb95;}
+  /* Eco de lo elegido: su fachada + su frase (decisiones 1a y 2b) */
+  .eco{display:none;align-items:center;gap:14px;margin-top:24px;padding:12px 14px;
+       background:#fff;border:1px solid var(--linea);border-left:2px solid var(--oro);}
+  .eco.on{display:flex;}
+  .eco .mini{width:74px;height:52px;flex:none;background-size:cover;background-position:center;}
+  .eco .txt{font-size:13px;color:var(--carbon);line-height:1.45;}
+  .eco .txt b{display:block;font-family:Georgia,serif;font-size:15px;color:var(--negro);font-weight:normal;margin-bottom:2px;}
   .promesa{font-size:14px;color:var(--carbon);margin:-22px 0 26px;padding-left:13px;border-left:2px solid var(--oro);line-height:1.45;}
   @media(max-width:600px){
     .pantalla[data-p="1"] .kicker{margin-bottom:8px;}
@@ -81,6 +93,13 @@
     .pantalla[data-p="2"] h2{font-size:20px;margin-bottom:8px;}
     .pantalla[data-p="2"] .sub{margin-bottom:12px;}
     .pantalla[data-p="2"] .nav{margin-top:20px;}
+    .chip{padding:8px 14px;min-height:42px;}
+    .chip .chip-n{font-size:12.5px;}
+    .chip .chip-a{font-size:9.5px;}
+    .eco{margin-top:16px;padding:10px 12px;gap:11px;}
+    .eco .mini{width:62px;height:44px;}
+    .eco .txt{font-size:11.5px;}
+    .eco .txt b{font-size:13px;}
     /* P5 carácter: que título + 4 tarjetas + barra en vivo quepan sin scroll */
     .pantalla[data-p="4"] .kicker{margin-bottom:8px;}
     .pantalla[data-p="4"] h2{font-size:20px;margin-bottom:8px;}
@@ -327,6 +346,7 @@
     <h2 data-txt="p2_titulo">Al llegar a casa, ¿cómo quieres <em>sentirte</em>?</h2>
     <p class="sub" id="sensSub" data-txt="p2_sub" aria-live="polite">Elige hasta 3.</p>
     <div class="chips" id="sensaciones"></div>
+    <div class="eco" id="ecoSens" aria-live="polite"></div>
     <div class="nav"><button class="atras" data-txt="btn_atras" onclick="ir(1)">← Atrás</button><button class="btn" id="sensCont" data-txt="p2_btn" onclick="contSens()">Continuar →</button></div>
   </section>
 
@@ -544,6 +564,8 @@ const TEXTOS = {
   p1_titulo:"¿Cuál de estas fachadas se siente más <em>tuya</em>?",
   p1_sub:"No pienses, siente. Elige una para empezar.",
   p1_promesa:"Al terminar ves los metros que tu residencia necesita · 90 segundos, gratis.",
+  p2_eco_base:"Tu fachada + tu sensación = el punto de partida de tu proyecto.",
+  p2_eco_frase_tpl:"{s1}, {s2} y {s3}. Con eso ya podemos empezar.",
   p2_kicker:"02 · La sensación",
   p2_titulo:"Al llegar a casa, ¿cómo quieres <em>sentirte</em>?",
   p2_sub:"Elige hasta 3.", p2_btn:"Continuar →",
@@ -741,6 +763,10 @@ const ESTILOS = [
   {id:"clasico",n:"",d:"Teja de barro sobre volúmenes nuevos: lo tradicional mexicano en clave contemporánea.",v:"v6"}
 ];
 const SENSACIONES = ["Paz","Orgullo","Calidez","Asombro","Libertad","Intimidad","Grandeza","Frescura"];
+/* Palabra de apoyo de cada sensacion (mismo orden que SENSACIONES).
+   Editable desde el Sheet con las claves sensacion_1_apoyo ... sensacion_8_apoyo. */
+const SENS_APOYO = ["silencio y sombra","para presumirla","madera y luz tibia","que corte el aliento",
+  "sin muros de más","solo para los tuyos","techos altos","aire y verde"];
 /* id ESTABLE por momento: el nombre (TEXTOS WEB) y el map (MOMENTOS WEB) se
    sobreescriben por id, NO por posición — así reordenar el Sheet nunca vuelve a
    pegar el nombre de un momento sobre el extra de otro (bug "cocinar→terraza").
@@ -949,8 +975,10 @@ function render(){
       <div class="visual ${e.v}" role="img" aria-label="Fachada estilo ${e.n}"></div>
       <div class="body">${e.n?`<h3>${e.n}</h3>`:``}<p>${e.d}</p></div>
     </div>`).join("");
-  document.getElementById("sensaciones").innerHTML=SENSACIONES.map(s=>
-    `<button class="chip ${S.sensaciones.includes(s)?'sel':''}" role="button" aria-pressed="${S.sensaciones.includes(s)}" onclick="togSens('${s}')">${s}</button>`).join("");
+  document.getElementById("sensaciones").innerHTML=SENSACIONES.map((s,i)=>{
+    const ap=SENS_APOYO[i]||"";
+    return `<button class="chip ${S.sensaciones.includes(s)?'sel':''}" data-s="${s}" role="button" aria-pressed="${S.sensaciones.includes(s)}" aria-label="${s}${ap?', '+ap:''}" onclick="togSens('${s}')"><span class="chip-n">${s}</span>${ap?`<span class="chip-a">${ap}</span>`:``}</button>`;
+  }).join("");
   updateSensUI();
   document.getElementById("momentos").innerHTML=MOMENTOS.map((m,i)=>{
     const on=S.momentos.includes(i);
@@ -1053,7 +1081,7 @@ function togSens(s){
 /* feedback al tocar un 4o chip: sacude el chip + resalta el subtitulo */
 function sacudirChip(s){
   document.querySelectorAll("#sensaciones .chip").forEach(function(c){
-    if(c.textContent===s){c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake");}
+    if(c.dataset.s===s){c.classList.remove("shake");void c.offsetWidth;c.classList.add("shake");}
   });
   var sub=document.getElementById("sensSub");
   if(sub){sub.classList.remove("flash");void sub.offsetWidth;sub.classList.add("flash");}
@@ -1069,6 +1097,29 @@ function updateSensUI(){
   });
   var btn=document.getElementById("sensCont");
   if(btn)btn.classList.toggle("btn-off", n===0);
+  renderEcoSens();
+}
+/* Eco de lo elegido (1a): su fachada abajo; y al llegar a 3, su frase (2b). */
+function renderEcoSens(){
+  var eco=document.getElementById("ecoSens");
+  if(!eco)return;
+  var est=ESTILOS.filter(function(e){return e.id===S.estilo;})[0];
+  if(!est){eco.className="eco";eco.innerHTML="";return;}
+  var n=S.sensaciones.length, linea;
+  if(n>=3){
+    var l=S.sensaciones.map(function(x,i){return i===0?x:x.toLowerCase();});
+    linea=rellenarTpl(TEXTOS.p2_eco_frase_tpl||"{s1}, {s2} y {s3}. Con eso ya podemos empezar.",
+      {s1:l[0],s2:l[1],s3:l[2]});
+  } else {
+    linea=TEXTOS.p2_eco_base||"Tu fachada + tu sensación = el punto de partida.";
+  }
+  eco.className="eco on";
+  eco.innerHTML='<div class="mini '+est.v+'" role="img" aria-label="La fachada que elegiste"></div>'+
+                '<div class="txt"><b>Esto ya es tuyo</b>'+linea+'</div>';
+}
+/* rellena {tokens} de una plantilla de TEXTOS */
+function rellenarTpl(tpl,vals){
+  return String(tpl).replace(/\{(\w+)\}/g,function(m,k){return vals[k]!==undefined?vals[k]:m;});
 }
 /* guard de Continuar: pide minimo 1 sin bloquear con alert */
 function contSens(){
@@ -1315,6 +1366,7 @@ function aplicarTextos(t){
   if(T.doc_titulo)document.title=T.doc_titulo;
   ESTILOS.forEach((e,i)=>{const n=T["estilo_"+(i+1)+"_nombre"],d=T["estilo_"+(i+1)+"_desc"];if(n)e.n=n;if(d)e.d=d;});
   for(let i=0;i<SENSACIONES.length;i++){const v=T["sensacion_"+(i+1)];if(v)SENSACIONES[i]=v;}
+  for(let i=0;i<SENS_APOYO.length;i++){const v=T["sensacion_"+(i+1)+"_apoyo"];if(v!==undefined)SENS_APOYO[i]=v;}
   MOMENTOS.forEach(m=>{const v=T["momento_"+m.id];if(v)m.n=v;});  /* override del NOMBRE por id estable, no por posición */
   NIVELES.forEach((n,i)=>{
     const a=T["caracter_"+(i+1)+"_nombre"],b=T["caracter_"+(i+1)+"_desc"],m=T["caracter_"+(i+1)+"_mood"];
