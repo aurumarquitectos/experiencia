@@ -137,9 +137,27 @@
   .btn.btn-off{opacity:.5;}
   .flash{animation:sub-flash 1.3s ease;}
   @keyframes sub-flash{0%,65%{color:var(--oro);font-weight:bold;}100%{color:var(--carbon);font-weight:normal;}}
+  /* Encabezado de familia de momentos (decision 2b) */
+  .mom-grupo{width:100%;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;color:var(--piedra);
+             margin:16px 0 2px;padding-top:12px;border-top:1px solid var(--linea);}
+  .mom-grupo:first-child{margin-top:0;padding-top:0;border-top:0;}
+  .mom-sep{width:100%;height:8px;}
+  /* La barra de seguir, siempre a la vista en celular (decision 1a) */
   .mom-resumen{display:none;margin:16px 0 0;font-size:12.5px;color:var(--oro);letter-spacing:.3px;line-height:1.5;}
   .mom-resumen.show{display:block;}
-  @media(max-width:600px){#momentos{display:grid;grid-template-columns:1fr 1fr;gap:10px;}#momentos .chip.mom{padding:8px 26px 8px 14px;}#momentos .chip.mom .mom-add{font-size:10px;}}
+  @media(max-width:600px){
+    #momentos{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    #momentos .chip.mom{padding:10px 14px;justify-content:center;text-align:center;min-height:44px;}
+    #momentos .mom-grupo,#momentos .mom-sep{grid-column:1 / -1;}
+    #momentos .mom-grupo{margin:10px 0 0;padding-top:10px;}
+    /* el boton de seguir no puede nacer fuera de la pantalla */
+    .pantalla[data-p="3"]{padding-bottom:84px;}
+    .pantalla[data-p="3"] .nav{position:fixed;left:0;right:0;bottom:0;margin:0;z-index:60;
+      background:var(--crema);border-top:1px solid var(--linea);
+      padding:10px 20px calc(10px + env(safe-area-inset-bottom));
+      display:flex;align-items:center;gap:12px;box-shadow:0 -6px 18px rgba(26,26,26,.06);}
+    .pantalla[data-p="3"] .nav .btn{flex:1;}
+  }
   .shake{animation:aur-shake .35s;}
   @keyframes aur-shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-4px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
   /* Carácter: 4 tarjetas IDÉNTICAS, sin jerarquía visual (decisión 2026-06:
@@ -353,7 +371,7 @@
   <section class="pantalla" data-p="3">
     <div class="kicker" data-txt="p3_kicker">03 · Tu vida diaria</div>
     <h2 data-txt="p3_titulo">¿Dónde transcurren tus mejores <em>momentos</em>?</h2>
-    <p class="sub" data-txt="p3_sub">Toca los que sean tuyos. Cada momento suma un espacio real a tu casa.</p>
+    <p class="sub" data-txt="p3_sub">Toca los que reconozcas como tuyos. Sin pensarlo mucho.</p>
     <div class="chips" id="momentos"></div>
     <div class="mom-resumen" id="momResumen" aria-live="polite"></div>
     <div class="nav"><button class="atras" data-txt="btn_atras" onclick="ir(2)">← Atrás</button><button class="btn" id="momCont" data-txt="p3_btn" onclick="contMom()">Continuar →</button></div>
@@ -571,7 +589,7 @@ const TEXTOS = {
   p2_sub:"Elige hasta 3.", p2_btn:"Continuar →",
   p3_kicker:"03 · Tu vida diaria",
   p3_titulo:"¿Dónde transcurren tus mejores <em>momentos</em>?",
-  p3_sub:"Toca los que sean tuyos. Cada momento suma un espacio real a tu casa.",
+  p3_sub:"Toca los que reconozcas como tuyos. Sin pensarlo mucho.",
   p3_btn:"Continuar →",
   p4_kicker:"04 · El carácter",
   car_titulo:"¿Con cuál de estos caracteres <em>conectas</em>?",
@@ -772,21 +790,23 @@ const SENS_APOYO = ["silencio y sombra","para presumirla","madera y luz tibia","
    pegar el nombre de un momento sobre el extra de otro (bug "cocinar→terraza").
    Los nuevos van AL FINAL: los índices 0-7 no cambian (payload/CRM intactos). */
 const MOMENTOS = [
-  {id:"terraza", n:"Tardes en la terraza",  map:["terraza","asador"]},
-  {id:"cocina",  n:"Cocinar en familia",    map:[],up:{cocina:"grande"}},
-  {id:"recibir", n:"Recibir invitados",     map:["bar"]},
-  {id:"trabajo", n:"Trabajar desde casa",   map:["estudio"]},
-  {id:"entrenar",n:"Entrenar",              map:["cuarto_juegos"]},
-  {id:"pelicula",n:"Noches de película",    map:["sala_tv"]},
-  {id:"leer",    n:"Leer en silencio",      map:["biblioteca"]},
-  {id:"nadar",   n:"Nadar y asolearse",     map:["alberca"]},
-  {id:"jardin",  n:"Disfrutar el jardín",   map:["jardin"]},
-  {id:"visitas", n:"Que se queden las visitas", map:["recamara_visita"]},
-  {id:"mascotas",n:"Convivir con mascotas", map:["estacion_mascotas"]},
-  {id:"taller",  n:"Un taller o hobby",     map:["taller"]},
-  {id:"huerto",  n:"Cultivar mi huerto",    map:["huerto"]},
-  {id:"ninguno", n:"Nada en particular por ahora", map:[], neutral:true}
+  {id:"terraza", n:"Tardes en la terraza",  map:["terraza","asador"], g:1},
+  {id:"nadar",   n:"Nadar y asolearse",     map:["alberca"], g:1},
+  {id:"jardin",  n:"Disfrutar el jardín",   map:["jardin"], g:1},
+  {id:"huerto",  n:"Cultivar mi huerto",    map:["huerto"], g:1},
+  {id:"mascotas",n:"Convivir con mascotas", map:["estacion_mascotas"], g:1},
+  {id:"cocina",  n:"Cocinar en familia",    map:[],up:{cocina:"grande"}, g:2},
+  {id:"recibir", n:"Recibir invitados",     map:["bar"], g:2},
+  {id:"pelicula",n:"Noches de película",    map:["sala_tv"], g:2},
+  {id:"visitas", n:"Que se queden las visitas", map:["recamara_visita"], g:2},
+  {id:"leer",    n:"Leer en silencio",      map:["biblioteca"], g:3},
+  {id:"trabajo", n:"Trabajar desde casa",   map:["estudio"], g:3},
+  {id:"entrenar",n:"Entrenar",              map:["cuarto_juegos"], g:3},
+  {id:"taller",  n:"Un taller o hobby",     map:["taller"], g:3},
+  {id:"ninguno", n:"Nada en particular por ahora", map:[], neutral:true, g:4}
 ];
+/* Encabezado de cada familia de momentos (editable desde el Sheet: p3_grupo_1..3) */
+const MOM_GRUPOS = {1:"Al aire libre", 2:"Adentro, en familia", 3:"Mi espacio", 4:""};
 /* 4 caracteres PARALELOS (decisión 2026-06: ninguno es "más" que otro; el
    orden de despliegue rompe a propósito la rampa de multiplicadores). Los id
    internos (Acogedora/Casual/Elegante/Lujo) NO cambian: CAT.mult, el CRM y
@@ -980,14 +1000,23 @@ function render(){
     return `<button class="chip ${S.sensaciones.includes(s)?'sel':''}" data-s="${s}" role="button" aria-pressed="${S.sensaciones.includes(s)}" aria-label="${s}${ap?', '+ap:''}" onclick="togSens('${s}')"><span class="chip-n">${s}</span>${ap?`<span class="chip-a">${ap}</span>`:``}</button>`;
   }).join("");
   updateSensUI();
-  document.getElementById("momentos").innerHTML=MOMENTOS.map((m,i)=>{
-    const on=S.momentos.includes(i);
-    const nombres=(m.map||[]).map(k=>CAT.espacios[k]?CAT.espacios[k].n:k);
-    let label=nombres.length?"+ "+nombres.join(" · "):"";
-    if(m.up)for(const k in m.up){if(CAT.espacios[k])label=(label?label+" · ":"")+CAT.espacios[k].n+" más amplia";}
-    const add=label?`<span class="mom-add">${label}</span>`:"";
-    return `<button class="chip mom ${on?'sel':''}" role="button" aria-pressed="${on}" onclick="togMom(${i})"><span class="mom-n">${m.n}</span>${add}</button>`;
-  }).join("");
+  /* Momentos agrupados por familia y SIN texto explicativo debajo (decision de
+     Alejandro 1-sep: el cuestionario es sensorial, no un inventario de espacios).
+     Los espacios se siguen sumando POR DENTRO al proyecto; solo no se muestran. */
+  (function(){
+    var cont=document.getElementById("momentos"), html="", gPrev=null;
+    MOMENTOS.forEach(function(m,i){
+      if(m.g!==gPrev){
+        var t=MOM_GRUPOS[m.g]||"";
+        if(t)html+='<div class="mom-grupo">'+t+'</div>';
+        else if(gPrev!==null)html+='<div class="mom-sep"></div>';
+        gPrev=m.g;
+      }
+      var on=S.momentos.indexOf(i)>=0;
+      html+='<button class="chip mom '+(on?'sel':'')+'" role="button" aria-pressed="'+on+'" onclick="togMom('+i+')">'+m.n+'</button>';
+    });
+    cont.innerHTML=html;
+  })();
   updateMomUI();
   document.getElementById("niveles").innerHTML=NIVELES.map(n=>`
     <div class="nivel ${S.nivel===n.id?'sel':''}" role="button" tabindex="0" aria-pressed="${S.nivel===n.id}" aria-label="Carácter ${n.n}. ${n.d}" onclick="selNivel('${n.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selNivel('${n.id}')}">
@@ -1149,18 +1178,11 @@ function togMom(i){
 }
 /* P4: resumen vivo de espacios que va sumando la casa + estado del botón. */
 function updateMomUI(){
-  const nombres=[];let cocinaUp=false;
-  S.momentos.forEach(i=>{const m=MOMENTOS[i];if(!m)return;
-    (m.map||[]).forEach(k=>{if(CAT.espacios[k])nombres.push(CAT.espacios[k].n);});
-    if(m.up&&m.up.cocina)cocinaUp=true;});
-  const el=document.getElementById("momResumen");
-  if(el){
-    el.classList.remove("flash");
-    if(nombres.length){el.textContent="Tu casa va sumando "+nombres.length+(nombres.length===1?" espacio: ":" espacios: ")+nombres.join(" · ")+(cocinaUp?" · cocina más amplia":"");el.classList.add("show");}
-    else if(cocinaUp){el.textContent="Tu cocina será más amplia.";el.classList.add("show");}
-    else{el.textContent="";el.classList.remove("show");}
-  }
-  const btn=document.getElementById("momCont");
+  /* Ya NO se muestra el conteo de espacios (decision de Alejandro 1-sep).
+     El elemento se conserva porque contMom/las validaciones lo usan para avisos. */
+  var el=document.getElementById("momResumen");
+  if(el){el.textContent="";el.classList.remove("show","flash");}
+  var btn=document.getElementById("momCont");
   if(btn)btn.classList.remove("btn-off");  /* siempre se puede avanzar */
 }
 /* guard de Continuar: pide mínimo 1 momento, sin bloquear con alert. */
