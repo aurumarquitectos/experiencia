@@ -590,6 +590,7 @@ const TEXTOS = {
   p3_kicker:"03 · Tu vida diaria",
   p3_titulo:"¿Dónde transcurren tus mejores <em>momentos</em>?",
   p3_sub:"Toca los que reconozcas como tuyos. Sin pensarlo mucho.",
+  p3_grupo_1:"Al aire libre", p3_grupo_2:"Adentro, en familia", p3_grupo_3:"Mi espacio",
   p3_btn:"Continuar →",
   p4_kicker:"04 · El carácter",
   car_titulo:"¿Con cuál de estos caracteres <em>conectas</em>?",
@@ -1389,6 +1390,7 @@ function aplicarTextos(t){
   ESTILOS.forEach((e,i)=>{const n=T["estilo_"+(i+1)+"_nombre"],d=T["estilo_"+(i+1)+"_desc"];if(n)e.n=n;if(d)e.d=d;});
   for(let i=0;i<SENSACIONES.length;i++){const v=T["sensacion_"+(i+1)];if(v)SENSACIONES[i]=v;}
   for(let i=0;i<SENS_APOYO.length;i++){const v=T["sensacion_"+(i+1)+"_apoyo"];if(v!==undefined)SENS_APOYO[i]=v;}
+  for(let g=1;g<=3;g++){const v=T["p3_grupo_"+g];if(v!==undefined)MOM_GRUPOS[g]=v;}
   MOMENTOS.forEach(m=>{const v=T["momento_"+m.id];if(v)m.n=v;});  /* override del NOMBRE por id estable, no por posición */
   NIVELES.forEach((n,i)=>{
     const a=T["caracter_"+(i+1)+"_nombre"],b=T["caracter_"+(i+1)+"_desc"],m=T["caracter_"+(i+1)+"_mood"];
