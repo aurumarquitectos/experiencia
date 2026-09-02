@@ -1375,6 +1375,45 @@ function revelar(){
    es el respaldo embebido. */
 function aplicarTextos(t){
   if(t&&typeof t==="object")Object.keys(t).forEach(k=>{if(t[k]!=null&&t[k]!=="")TEXTOS[k]=t[k];});
+  /* RECONCILIACIÓN (2026-09-02). El Sheet manda, pero todavía guarda la copy que
+     Alejandro y Sayri ya cambiaron en las láminas 1-3, así que el cliente seguía
+     viendo lo viejo. Regla: si la celda trae EXACTAMENTE el texto viejo, gana el
+     acordado; si trae cualquier otra cosa, ya la editó alguien y se respeta.
+     Al actualizar el Sheet esto se vuelve inerte solo — no hay que quitarlo. */
+  (function(){
+    var V="Decenas de familias ya dieron forma a su residencia con este proceso.";
+    var N="Diseñamos residencias en Hermosillo desde 2011.";
+    var acordado={
+      estilo_1_nombre:["Contemporáneo puro",""],
+      estilo_2_nombre:["Moderno cálido",""],
+      estilo_3_nombre:["Minimalista",""],
+      estilo_4_nombre:["Mediterráneo contemporáneo",""],
+      estilo_5_nombre:["Industrial sobrio",""],
+      estilo_6_nombre:["Clásico atemporal",""],
+      estilo_1_desc:["Líneas limpias, volúmenes francos, concreto y cristal.",
+        "Celosía y patio interior: contemporáneo mexicano de líneas limpias."],
+      estilo_2_desc:["Madera, celosías y luz; modernidad que abraza.",
+        "Volúmenes definidos y materiales cálidos: minimalismo contemporáneo."],
+      estilo_3_desc:["Menos, pero perfecto. Silencio material.",
+        "Minimalismo cálido y horizontal: mármol, vegetación y un mismo tono en toda la casa."],
+      estilo_4_desc:["Muros encalados, líneas suaves, vida al exterior.",
+        "Piedra y madera tejida: mediterráneo contemporáneo, con una sala al frente que se vive al aire libre."],
+      estilo_5_desc:["Acero, piedra y carácter sin disculpas.",
+        "Minimalista colonial de hacienda: zaguán y porche envolvente con arcadas que enlazan interior y exterior."],
+      estilo_6_desc:["Proporción, simetría y elegancia que no caduca.",
+        "Teja de barro sobre volúmenes nuevos: lo tradicional mexicano en clave contemporánea."],
+      p0_prueba:[V,N], r2_prueba:[V,N],
+      p3_sub:["Selecciona todos los que apliquen. Esto define los espacios de tu programa.",
+        "Toca los que reconozcas como tuyos. Sin pensarlo mucho."]
+    };
+    Object.keys(acordado).forEach(function(k){
+      var viejo=acordado[k][0], nuevo=acordado[k][1];
+      if(String(TEXTOS[k]||"").trim()===viejo)TEXTOS[k]=nuevo;
+    });
+    /* los nombres de estilo quedan vacíos a propósito: la tarjeta muestra solo
+       la descripción (decisión de Sayri, 29-ago). */
+    for(var i=1;i<=6;i++){var kk="estilo_"+i+"_nombre";if(TEXTOS[kk]==="")ESTILOS[i-1].n="";}
+  })();
   /* DESBLOQUEADO (2026-06-25, a pedido de Alejandro): el Sheet (TEXTOS WEB) manda
      sobre TODOS los textos; el const TEXTOS embebido es solo respaldo (celdas vacías).
      Se quitaron los overrides PORTADA, ESTILOS_TXT y el bloque "copy bloqueada en
