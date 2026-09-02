@@ -62,18 +62,12 @@
   .card .visual{height:150px;}
   .card:focus-visible{outline:2px solid var(--oro);outline-offset:2px;}
   .estilo-cue{display:none;}
-  /* Chips con palabra de apoyo (decision 3b) */
-  .chip{flex-direction:column;gap:2px;line-height:1.25;padding:9px 18px;}
-  .chip .chip-n{font-size:13px;letter-spacing:.5px;}
-  .chip .chip-a{font-size:10.5px;letter-spacing:.2px;color:var(--piedra);text-transform:none;}
-  .chip.sel .chip-a{color:#cdbb95;}
   /* Eco de lo elegido: su fachada + su frase (decisiones 1a y 2b) */
   .eco{display:none;align-items:center;gap:14px;margin-top:24px;padding:12px 14px;
        background:#fff;border:1px solid var(--linea);border-left:2px solid var(--oro);}
   .eco.on{display:flex;}
   .eco .mini{width:74px;height:52px;flex:none;background-size:cover;background-position:center;}
-  .eco .txt{font-size:13px;color:var(--carbon);line-height:1.45;}
-  .eco .txt b{display:block;font-family:Georgia,serif;font-size:15px;color:var(--negro);font-weight:normal;margin-bottom:2px;}
+  .eco .txt{font-family:Georgia,serif;font-size:15px;color:var(--negro);line-height:1.45;}
   .promesa{font-size:14px;color:var(--carbon);margin:-22px 0 26px;padding-left:13px;border-left:2px solid var(--oro);line-height:1.45;}
   @media(max-width:600px){
     .pantalla[data-p="1"] .kicker{margin-bottom:8px;}
@@ -93,13 +87,10 @@
     .pantalla[data-p="2"] h2{font-size:20px;margin-bottom:8px;}
     .pantalla[data-p="2"] .sub{margin-bottom:12px;}
     .pantalla[data-p="2"] .nav{margin-top:20px;}
-    .chip{padding:8px 14px;min-height:42px;}
-    .chip .chip-n{font-size:12.5px;}
-    .chip .chip-a{font-size:9.5px;}
+    .chip{padding:10px 16px;min-height:44px;}
     .eco{margin-top:16px;padding:10px 12px;gap:11px;}
     .eco .mini{width:62px;height:44px;}
-    .eco .txt{font-size:11.5px;}
-    .eco .txt b{font-size:13px;}
+    .eco .txt{font-size:13px;}
     /* P5 carácter: que título + 4 tarjetas + barra en vivo quepan sin scroll */
     .pantalla[data-p="4"] .kicker{margin-bottom:8px;}
     .pantalla[data-p="4"] h2{font-size:20px;margin-bottom:8px;}
@@ -782,10 +773,6 @@ const ESTILOS = [
   {id:"clasico",n:"",d:"Teja de barro sobre volúmenes nuevos: lo tradicional mexicano en clave contemporánea.",v:"v6"}
 ];
 const SENSACIONES = ["Paz","Orgullo","Calidez","Asombro","Libertad","Intimidad","Grandeza","Frescura"];
-/* Palabra de apoyo de cada sensacion (mismo orden que SENSACIONES).
-   Editable desde el Sheet con las claves sensacion_1_apoyo ... sensacion_8_apoyo. */
-const SENS_APOYO = ["silencio y sombra","para presumirla","madera y luz tibia","que corte el aliento",
-  "sin muros de más","solo para los tuyos","techos altos","aire y verde"];
 /* id ESTABLE por momento: el nombre (TEXTOS WEB) y el map (MOMENTOS WEB) se
    sobreescriben por id, NO por posición — así reordenar el Sheet nunca vuelve a
    pegar el nombre de un momento sobre el extra de otro (bug "cocinar→terraza").
@@ -997,8 +984,9 @@ function render(){
       <div class="body">${e.n?`<h3>${e.n}</h3>`:``}<p>${e.d}</p></div>
     </div>`).join("");
   document.getElementById("sensaciones").innerHTML=SENSACIONES.map((s,i)=>{
-    const ap=SENS_APOYO[i]||"";
-    return `<button class="chip ${S.sensaciones.includes(s)?'sel':''}" data-s="${s}" role="button" aria-pressed="${S.sensaciones.includes(s)}" aria-label="${s}${ap?', '+ap:''}" onclick="togSens('${s}')"><span class="chip-n">${s}</span>${ap?`<span class="chip-a">${ap}</span>`:``}</button>`;
+    /* Solo la palabra: nada de texto explicativo debajo (decision de Alejandro
+       2-sep, misma regla que en momentos — el cuestionario es sensorial). */
+    return `<button class="chip ${S.sensaciones.includes(s)?'sel':''}" data-s="${s}" role="button" aria-pressed="${S.sensaciones.includes(s)}" onclick="togSens('${s}')">${s}</button>`;
   }).join("");
   updateSensUI();
   /* Momentos agrupados por familia y SIN texto explicativo debajo (decision de
@@ -1145,7 +1133,7 @@ function renderEcoSens(){
   }
   eco.className="eco on";
   eco.innerHTML='<div class="mini '+est.v+'" role="img" aria-label="La fachada que elegiste"></div>'+
-                '<div class="txt"><b>Esto ya es tuyo</b>'+linea+'</div>';
+                '<div class="txt">'+linea+'</div>';
 }
 /* rellena {tokens} de una plantilla de TEXTOS */
 function rellenarTpl(tpl,vals){
@@ -1428,7 +1416,6 @@ function aplicarTextos(t){
   if(T.doc_titulo)document.title=T.doc_titulo;
   ESTILOS.forEach((e,i)=>{const n=T["estilo_"+(i+1)+"_nombre"],d=T["estilo_"+(i+1)+"_desc"];if(n)e.n=n;if(d)e.d=d;});
   for(let i=0;i<SENSACIONES.length;i++){const v=T["sensacion_"+(i+1)];if(v)SENSACIONES[i]=v;}
-  for(let i=0;i<SENS_APOYO.length;i++){const v=T["sensacion_"+(i+1)+"_apoyo"];if(v!==undefined)SENS_APOYO[i]=v;}
   for(let g=1;g<=3;g++){const v=T["p3_grupo_"+g];if(v!==undefined)MOM_GRUPOS[g]=v;}
   MOMENTOS.forEach(m=>{const v=T["momento_"+m.id];if(v)m.n=v;});  /* override del NOMBRE por id estable, no por posición */
   NIVELES.forEach((n,i)=>{
