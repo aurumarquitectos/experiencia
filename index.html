@@ -344,7 +344,7 @@
     <h2 data-txt="p1_titulo">¿Cuál de estas fachadas se siente más <em>tuya</em>?</h2>
     <p class="sub" data-txt="p1_sub">No pienses, siente. Elige una para empezar.</p>
     <p class="promesa" data-txt="p1_promesa">Al terminar ves los metros que tu residencia necesita · 90 segundos, gratis.</p>
-    <div class="estilo-cue" aria-hidden="true">6 estilos · desliza para verlas ↓</div>
+    <div class="estilo-cue" data-txt="estilo_cue" aria-hidden="true">6 estilos · desliza para verlas ↓</div>
     <div class="grid g3" id="estilos"></div>
     <p class="candado" data-txt="p0_prueba" style="margin-top:16px;text-align:center;">Diseñamos residencias en Hermosillo desde 2011.</p>
     <p class="candado" style="margin-top:6px;text-align:center;"><a data-txt="p0_estudio" href="https://aurumarquitectos.github.io/?utm_source=quiz&amp;utm_medium=web&amp;utm_campaign=perfil_de_vida" target="_blank" rel="noopener" style="color:var(--oro);">Conoce el estudio →</a></p>
@@ -430,8 +430,8 @@
     <div class="gate">
       <input type="text" id="gNombre" data-ph="gate_ph_nombre" placeholder="Tu nombre">
       <input type="tel" id="gContact" inputmode="tel" data-ph="gate_ph_whats" placeholder="Tu WhatsApp">
-      <button type="button" class="gate-toggle" id="gateToggle" onclick="toggleContacto()">Prefiero por correo →</button>
-      <p class="candado" id="gateMsg" style="display:none;color:#a05252;">Déjanos tu nombre y tu WhatsApp (o correo) para enviarte tu estimado.</p>
+      <button type="button" class="gate-toggle" id="gateToggle" onclick="toggleContacto()"data-txt="gate_correo_btn">Prefiero por correo →</button>
+      <p class="candado" id="gateMsg" style="display:none;color:#a05252;" data-txt="gate_datos_sub">Déjanos tu nombre y tu WhatsApp (o correo) para enviarte tu estimado.</p>
       <p class="candado" data-txt="gate_compromiso" style="margin-bottom:10px;">Ya hiciste tus elecciones — verlas toma 10 segundos.</p>
       <button class="btn" style="width:100%;" data-txt="gate_btn3" onclick="revelar()">Ver mi residencia →</button>
       <p class="candado" data-txt="aviso_consentimiento" style="margin-top:8px;">Al continuar, aceptas nuestro <a href="aviso-privacidad.html" target="_blank" rel="noopener" style="color:var(--oro);">Aviso de Privacidad</a>.</p>
@@ -490,9 +490,9 @@
         <div class="agenda-embed" id="agendaEmbed"></div>
         <p class="nota" id="agendaFollow" style="margin-top:12px;"></p>
         <div id="gracias" role="status" aria-live="polite" style="display:none;margin-top:14px;padding:16px;background:var(--negro);border-left:3px solid var(--oro);color:#f4f1ec;">
-          <p class="serif" style="font-size:17px;color:var(--oro);margin-bottom:6px;" id="graciasTitulo">¡Listo!</p>
+          <p class="serif" style="font-size:17px;color:var(--oro);margin-bottom:6px;" id="graciasTitulo"data-txt="gracias_titulo">¡Listo!</p>
           <p style="font-size:13px;line-height:1.55;" id="graciasMsg"></p>
-          <a id="graciasLink" class="btn" style="display:none;width:100%;margin-top:12px;box-sizing:border-box;" target="_blank" rel="noopener">Abrir mi agenda →</a>
+          <a id="graciasLink" class="btn" style="display:none;width:100%;margin-top:12px;box-sizing:border-box;" target="_blank" rel="noopener"data-txt="agenda_abrir">Abrir mi agenda →</a>
         </div>
         <p class="nota" style="margin-top:10px;" data-txt="r3_post_agenda">¿Listo? Revisa tu correo: la invitación con tu enlace de videollamada ya va en camino — y mañana te llega tu estimado revisado.</p>
         <p class="nota" style="margin-top:6px;" data-txt="r2_reaseguro">Videollamada de 30 min · sin compromiso · puedes reagendar. Recibirás la invitación con el enlace de la videollamada en tu correo.</p>
@@ -582,6 +582,28 @@ const TEXTOS = {
   p3_titulo:"¿Dónde transcurren tus mejores <em>momentos</em>?",
   p3_sub:"Toca los que reconozcas como tuyos. Sin pensarlo mucho.",
   p3_grupo_1:"Al aire libre", p3_grupo_2:"Adentro, en familia", p3_grupo_3:"Mi espacio",
+
+  /* --- Textos que antes vivían sueltos en el código (2-sep). Regla de la casa:
+         todo lo que el cliente lee sale de una celda del Sheet. --- */
+  estilo_cue:"6 estilos · desliza para verlas ↓",
+  sens_sub_0:"Elige hasta 3 — las que más te muevan.",
+  sens_sub_full:"Tus 3 · toca una para cambiarla.",
+  sens_sub_n_tpl:"Elegiste {n} de 3.",
+  sens_min:"Elige al menos una para seguir.",
+  paso_tpl:"Paso {n} de 6", paso_casi:"Casi listo — solo tus datos",
+  paso_ultimo:"Último paso: elige tu sesión",
+  lb_lab_res:"Tu residencia", lb_lab_res_tpl:"Tu residencia · {caracter}",
+  hogar_ver:"Ajustar cada integrante ▾", hogar_ocultar:"Ocultar integrantes ▴",
+  terreno_r1:"≤ 300 m²", terreno_r2:"300 – 500", terreno_r3:"500 – 800",
+  terreno_r4:"800 – 1500", terreno_r5:"1500+ m²", terreno_nse:"No lo sé aún",
+  ampl_1_nombre:"Optimizada", ampl_1_desc:"Lo justo, muy bien resuelto.",
+  ampl_2_nombre:"Cómoda",     ampl_2_desc:"Con holgura natural.",
+  ampl_3_nombre:"Holgada",    ampl_3_desc:"Amplia y generosa.",
+  gate_correo_btn:"Prefiero por correo →",
+  gate_datos_sub:"Déjanos tu nombre y tu WhatsApp (o correo) para enviarte tu estimado.",
+  gracias_titulo:"¡Listo!",
+  agenda_abrir:"Abrir mi agenda →",
+  agenda_iframe_titulo:"Agenda tu Sesión de Descubrimiento",
   p3_btn:"Continuar →",
   p4_kicker:"04 · El carácter",
   car_titulo:"¿Con cuál de estos caracteres <em>conectas</em>?",
@@ -906,7 +928,7 @@ function renderIntegrantes(){
      atajo); el toggle lo despliega. Acorta mucho la pantalla en familias. */
   box.style.display=__hogarExpand?"":"none";
   const tg=document.getElementById("hogarToggle");
-  if(tg)tg.textContent=__hogarExpand?"Ocultar integrantes ▴":"Ajustar cada integrante ▾";
+  if(tg)tg.textContent=__hogarExpand?(TEXTOS.hogar_ocultar||"Ocultar integrantes ▴"):(TEXTOS.hogar_ver||"Ajustar cada integrante ▾");
 }
 let __hogarExpand=false;
 function toggleHogar(){__hogarExpand=!__hogarExpand;renderIntegrantes();}
@@ -1044,7 +1066,7 @@ function livebar(){
      que el número nazca de la elección y no de un relleno. */
   const niv=S.nivel?(NIVELES.find(n=>n.id===S.nivel)||null):null;
   const lab=document.getElementById("lbLabRes");
-  if(lab)lab.textContent=niv?("Tu residencia · "+niv.n):"Tu residencia";
+  if(lab)lab.textContent=niv?rellenarTpl(TEXTOS.lb_lab_res_tpl||"Tu residencia · {caracter}",{caracter:niv.n}):(TEXTOS.lb_lab_res||"Tu residencia");
   /* m²: "—" solo en la pantalla del carácter antes de elegir (reveal); de P6 en
      adelante siempre se muestra (el tamaño ya lo decide la amplitud, no el carácter). */
   const mostrarM2=!!S.nivel||pActual()>=5;
@@ -1075,7 +1097,7 @@ function ir(p){
   const prog=document.getElementById("progress");
   prog.innerHTML=Array.from({length:TOTAL_P},(_,i)=>`<span class="${i<p?'on':''}"></span>`).join("");  /* i<p: la pantalla p enciende p puntos (p1=1/8 … p8=8/8) */
   const pt=document.getElementById("pasoTxt");
-  if(pt)pt.textContent=p===8?"Último paso: elige tu sesión":p===7?"Casi listo — solo tus datos":(p>0?`Paso ${p} de 6`:"");
+  if(pt)pt.textContent=p===8?(TEXTOS.paso_ultimo||"Último paso: elige tu sesión"):p===7?(TEXTOS.paso_casi||"Casi listo — solo tus datos"):(p>0?rellenarTpl(TEXTOS.paso_tpl||"Paso {n} de 6",{n:p}):"");
   /* sticky "Elegir mi horario": ocupa el slot de la livebar en p8 y se
      oculta cuando el calendario entra al viewport (no tapar el confirmar) */
   const st=document.getElementById("stickyAgenda");
@@ -1108,8 +1130,9 @@ function sacudirChip(s){
 function updateSensUI(){
   var n=S.sensaciones.length, full=n>=3;
   var sub=document.getElementById("sensSub");
-  if(sub)sub.textContent = n===0 ? "Elige hasta 3 — las que más te muevan."
-    : full ? "Tus 3 · toca una para cambiarla." : "Elegiste "+n+" de 3.";
+  if(sub)sub.textContent = n===0 ? (TEXTOS.sens_sub_0||"Elige hasta 3 — las que más te muevan.")
+    : full ? (TEXTOS.sens_sub_full||"Tus 3 · toca una para cambiarla.")
+    : rellenarTpl(TEXTOS.sens_sub_n_tpl||"Elegiste {n} de 3.",{n:n});
   document.querySelectorAll("#sensaciones .chip").forEach(function(c){
     if(full && c.getAttribute("aria-pressed")!=="true")c.classList.add("full"); else c.classList.remove("full");
   });
@@ -1143,7 +1166,7 @@ function rellenarTpl(tpl,vals){
 function contSens(){
   if(S.sensaciones.length<1){
     var sub=document.getElementById("sensSub");
-    if(sub){sub.textContent="Elige al menos una para seguir.";sub.classList.remove("flash");void sub.offsetWidth;sub.classList.add("flash");}
+    if(sub){sub.textContent=TEXTOS.sens_min||"Elige al menos una para seguir.";sub.classList.remove("flash");void sub.offsetWidth;sub.classList.add("flash");}
     var btn=document.getElementById("sensCont");
     if(btn){btn.classList.remove("shake");void btn.offsetWidth;btn.classList.add("shake");}
     return;
@@ -1268,7 +1291,7 @@ function revelar(){
     const tactil=(window.matchMedia&&(window.matchMedia("(pointer: coarse)").matches||window.matchMedia("(max-width: 900px)").matches));
     if(urlAg&&!enApp&&!tactil){
       /* ESCRITORIO: iframe embebido */
-      ag.innerHTML=`<iframe src="${urlAg}" loading="lazy" title="Agenda tu Sesión de Descubrimiento"></iframe>`;
+      ag.innerHTML=`<iframe src="${urlAg}" loading="lazy" title="${TEXTOS.agenda_iframe_titulo||'Agenda tu Sesión de Descubrimiento'}"></iframe>`;
       ag.insertAdjacentHTML("afterend",
         `<a class="btn-agenda-alt" href="${urlAg}" target="_blank" rel="noopener">${TEXTOS.r2_fallback}</a>`);
       try{
@@ -1417,6 +1440,10 @@ function aplicarTextos(t){
   ESTILOS.forEach((e,i)=>{const n=T["estilo_"+(i+1)+"_nombre"],d=T["estilo_"+(i+1)+"_desc"];if(n)e.n=n;if(d)e.d=d;});
   for(let i=0;i<SENSACIONES.length;i++){const v=T["sensacion_"+(i+1)];if(v)SENSACIONES[i]=v;}
   for(let g=1;g<=3;g++){const v=T["p3_grupo_"+g];if(v!==undefined)MOM_GRUPOS[g]=v;}
+  /* rangos de terreno y amplitud: su texto también sale del Sheet */
+  TERRENOS.forEach(function(t){var v=T["terreno_"+t[0]];if(v)t[1]=v;});
+  AMPLITUDES.forEach(function(a,i){var n=T["ampl_"+(i+1)+"_nombre"],d=T["ampl_"+(i+1)+"_desc"];
+    if(n)a[1]=n; if(d)a[2]=d;});
   MOMENTOS.forEach(m=>{const v=T["momento_"+m.id];if(v)m.n=v;});  /* override del NOMBRE por id estable, no por posición */
   NIVELES.forEach((n,i)=>{
     const a=T["caracter_"+(i+1)+"_nombre"],b=T["caracter_"+(i+1)+"_desc"],m=T["caracter_"+(i+1)+"_mood"];
