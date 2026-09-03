@@ -708,9 +708,9 @@ const TEXTOS = {
   momento_5:"Entrenar", momento_6:"Noches de película",
   momento_7:"Leer en silencio", momento_8:"Nadar y asolearse",
 
-  caracter_1_nombre:"Serena", caracter_1_desc:"Quieta y envolvente. Pocos materiales, mucho silencio.", caracter_1_mood:"calma",
+  caracter_1_nombre:"Serena", caracter_1_desc:"Quieta y envolvente. Pocos materiales, mucho silencio.", caracter_1_mood:"refugio",
   caracter_2_nombre:"Sobria", caracter_2_desc:"Noble y medida. Materiales con presencia, luz contenida.", caracter_2_mood:"presencia",
-  caracter_3_nombre:"Cálida", caracter_3_desc:"Clara y luminosa. Lo necesario, muy bien resuelto.", caracter_3_mood:"calidez",
+  caracter_3_nombre:"Luminosa", caracter_3_desc:"Clara y luminosa. Lo necesario, muy bien resuelto.", caracter_3_mood:"cercanía",
   caracter_4_nombre:"De autor", caracter_4_desc:"Una pieza única: cada vista, una postal.", caracter_4_mood:"distinción"
 };
 
@@ -822,9 +822,9 @@ const MOM_GRUPOS = {1:"Al aire libre", 2:"Adentro, en familia", 3:"Mi espacio", 
    internos (Acogedora/Casual/Elegante/Lujo) NO cambian: CAT.mult, el CRM y
    la tarea diaria dependen de ellos. Solo cambia cómo se PRESENTAN. */
 const NIVELES = [
-  {id:"Acogedora",n:"Serena",d:"Quieta y envolvente. Pocos materiales, mucho silencio.",mood:"calma"},
+  {id:"Acogedora",n:"Serena",d:"Quieta y envolvente. Pocos materiales, mucho silencio.",mood:"refugio"},
   {id:"Elegante",n:"Sobria",d:"Noble y medida. Materiales con presencia, luz contenida.",mood:"presencia"},
-  {id:"Casual",n:"Cálida",d:"Clara y luminosa. Lo necesario, muy bien resuelto.",mood:"calidez"},
+  {id:"Casual",n:"Luminosa",d:"Clara y luminosa. Lo necesario, muy bien resuelto.",mood:"cercanía"},
   {id:"Lujo",n:"De autor",d:"Una pieza única: cada vista, una postal.",mood:"distinción"}
 ];
 /* Orden por DESEO (recomendación panel 2026-06-16): los más aspiracionales
@@ -1256,7 +1256,7 @@ function revelar(){
   const f=new Date(),suf=(Date.now().toString(36)+Math.random().toString(36).slice(2)).slice(-5).toUpperCase();
   const folio=`AUR-${f.getFullYear()}${String(f.getMonth()+1).padStart(2,"0")}${String(f.getDate()).padStart(2,"0")}-${inic}-${suf}`;
   window.__folioActual=folio;
-  const caracter=NIVELES.find(n=>n.id===S.nivel)||{n:"Cálida"};
+  const caracter=NIVELES.find(n=>n.id===S.nivel)||{n:"Luminosa"};
   const estilo=(ESTILOS.find(e=>e.id===S.estilo)||{n:"Por definir"});
   document.getElementById("rFolio").textContent="FOLIO "+folio;
   document.getElementById("rTitulo").textContent=tpl(TEXTOS.r3_titulo_tpl,{nombre:primerNombre});
