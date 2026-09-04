@@ -955,13 +955,15 @@ function renderIntegrantes(){
   const pv=document.getElementById("personasVal");if(pv)pv.textContent=S.personas;
   const rh=document.getElementById("resumenHogar");
   if(rh)rh.textContent=tpl(TEXTOS.hogar_resumen_tpl,{p:S.personas,r:numRecamaras()});
-  /* el detalle por integrante se colapsa por defecto (la mayoría resuelve con un
-     atajo); el toggle lo despliega. Acorta mucho la pantalla en familias. */
+  /* el detalle por integrante se muestra por defecto; el toggle lo colapsa. */
   box.style.display=__hogarExpand?"":"none";
   const tg=document.getElementById("hogarToggle");
   if(tg)tg.textContent=__hogarExpand?(TEXTOS.hogar_ocultar||"Ocultar integrantes ▴"):(TEXTOS.hogar_ver||"Ajustar cada integrante ▾");
 }
-let __hogarExpand=false;
+/* El detalle por integrante nace ABIERTO (decisión Alejandro 4-sep-2026): el
+   bloque de hogar queda como una sola forma a la vista, sin un clic previo que
+   esconda quién es cada quien. El botón sigue ahí para colapsarlo y comparar. */
+let __hogarExpand=true;
 function toggleHogar(){__hogarExpand=!__hogarExpand;renderIntegrantes();}
 /* TERRENO por chips de rango (ya no slider): es informativo (no cambia m²),
    solo registra la superficie aprox para el arquitecto. */
