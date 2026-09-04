@@ -379,7 +379,7 @@
   <section class="pantalla" data-p="5">
     <div class="kicker" data-txt="p5_kicker">05 · Lo esencial</div>
     <h2 data-txt="p5_titulo">Tu residencia toma <em>forma</em>.</h2>
-    <p class="sub" data-txt="p5_sub">Cada dato dibuja tu residencia abajo en tiempo real.</p>
+    <p class="sub" data-txt="p5_sub">Con cada respuesta, tu residencia va tomando medida.</p>
 
     <div class="fila-dato" style="flex-direction:column;align-items:stretch;">
       <label><span data-txt="p5_ampl_lab">La amplitud de tus espacios</span><small data-txt="p5_ampl_sub">Tú decides cuánto espacio quieres en cada área.</small></label>
@@ -610,7 +610,7 @@ const TEXTOS = {
   car_sub:"No hay uno mejor: elige el tuyo y mira tu residencia tomar forma abajo.",
   p5_kicker:"05 · Lo esencial",
   p5_titulo:"Tu residencia toma <em>forma</em>.",
-  p5_sub:"Cada dato dibuja tu residencia abajo en tiempo real.",
+  p5_sub:"Con cada respuesta, tu residencia va tomando medida.",
   p5_terreno_lab:"Terreno", p5_terreno_sub:"Superficie aproximada",
   p5_hogar_lab:"Quiénes vivirán aquí",
   p5_hogar_sub:"Cuéntanos de cada integrante — solo a golpe de click",
@@ -763,7 +763,9 @@ const S = {
   estilo:null, sensaciones:[], momentos:[], nivel:null,
   amplitud:"comoda", /* tamaño = decisión explícita del cliente (optimizada/comoda/holgada → chico/mediano/grande). NO depende del carácter ni del terreno. */
   contactoTipo:"whatsapp", /* gate: canal de contacto elegido (whatsapp default | correo) */
-  terreno:500, personas:2, plantas:2, autos:2,
+  /* terreno: arranca SIN elegir ("No lo sé aún") para poder distinguir a quien
+     sí lo contestó de quien nunca bajó. No entra al cálculo. */
+  terreno:null, personas:2, plantas:2, autos:2,
   /* integrantes: una entrada por persona; etapa = adulto|adolescente|nino;
      propia=false significa "comparte recámara" (los que comparten se agrupan
      de a 2). Default: pareja que comparte la principal. */
