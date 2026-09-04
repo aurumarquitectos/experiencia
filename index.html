@@ -750,6 +750,14 @@ const CAT = {
   precios:{llave:18500,ejecutivo:1350,diseno:850},
   mult:{Acogedora:0.85,Casual:1.0,Elegante:1.2,Lujo:1.4},
   banda:{lo:0.95,hi:1.12},
+  /* AMPLITUD (decisión Alejandro 3-sep-2026, opción A): las tres opciones ya NO
+     son tres programas distintos. Se calcula UNA sumatoria real (el programa en
+     su tamaño base) y la amplitud es un escalón porcentual sobre ella:
+     Optimizada = base, Cómoda = +10%, Holgada = +21%. Cada una se muestra como
+     un rango de 10%, así el techo de un escalón es el piso del siguiente.
+     Ambos números son editables desde el catálogo (app.amplitud_escalon /
+     app.amplitud_banda) para no volver a tocar código. */
+  amplEscalon:0.10,
   /* Circulaciones y grosor de muros: +12% sobre el subtotal de m² HABITABLES
      (regla 2026-06-11, sustituye a "NO aplicar circulación"). Entra a la base
      de cotización de los 3 servicios. Editar SOLO aquí (y el espejo en el .gs
@@ -838,11 +846,24 @@ const EXTRAS_UI = ["alberca","terraza","asador","sala_tv","estudio","cuarto_jueg
    _comoda/_holgada = chico|mediano|grande). aplicarCatalogo() lo sobreescribe si
    el Sheet lo trae; este objeto es solo el respaldo. */
 let AMPL_TAMANO={optimizada:"chico",comoda:"mediano",holgada:"grande"};
+/* El programa se arma SIEMPRE en el tamaño de "optimizada": esa es la sumatoria
+   real. Cómoda y Holgada son escalones de 10% sobre ella, no otro programa. */
+const AMPL_ORDEN={optimizada:0,comoda:1,holgada:2};
+function amplPaso(){const i=AMPL_ORDEN[S.amplitud];return i==null?1:i;}
+/* margen en m² del escalón n sobre la sumatoria base. Se redondea con la MISMA
+   fórmula para el piso y para el techo, así el techo de un escalón es
+   exactamente el piso del siguiente y los rangos nunca se traslapan. */
+function amplMargen(base,n){return Math.round(base*(Math.pow(1+CAT.amplEscalon,n)-1));}
+const r5=n=>Math.round(n/5)*5;
+/* "≈ 97 – 107 m²" (o un solo número si el rango colapsa al redondear a 5) */
+function m2Rango(c){const a=r5(c.habLo),b=r5(c.habHi);
+  return b>a?(a.toLocaleString("es-MX")+" – "+b.toLocaleString("es-MX")+" m²")
+            :(a.toLocaleString("es-MX")+" m²");}
 function tamano(){
   /* El TAMAÑO lo decide EXPLÍCITAMENTE el cliente (amplitud), no el carácter ni
      el terreno. El carácter solo define el nivel de acabado (multiplicador de
      precio, en calcular); el terreno es informativo para el arquitecto. */
-  return AMPL_TAMANO[S.amplitud]||"mediano";
+  return AMPL_TAMANO.optimizada||"chico";
 }
 /* Recámaras derivadas del hogar real: cada integrante con recámara propia
    suma una; los que comparten se agrupan de a 2 por recámara. Piso 1,
@@ -881,14 +902,22 @@ function calcular(){
   const circ=Math.round(habNeto*CAT.circulacion);
   hab+=circ;
   programa.push(["Circulaciones y grosor de muros (+"+Math.round(CAT.circulacion*100)+"%)",circ,true]);
+  /* Escalón de amplitud sobre el programa habitable ya con circulación.
+     Es una línea visible del programa para que la sumatoria siga cuadrando. */
+  const habBase=hab, nAmpl=amplPaso();
+  const margen=amplMargen(habBase,nAmpl);
+  if(margen>0){hab+=margen;programa.push(["Holgura de amplitud (+"+Math.round((Math.pow(1+CAT.amplEscalon,nAmpl)-1)*100)+"%)",margen,true]);}
   const coch=S.autos*CAT.espacios.cochera.porAuto;
   nohab+=coch;programa.push(["Cochera ("+S.autos+" veh)",coch,false]);
   const sumP=programa.reduce((a,r)=>a+r[1],0);
   console.assert(sumP===hab+nohab,"Assert sumatoria");
   const mult=CAT.mult[S.nivel||"Casual"];
-  const base=hab*CAT.precios.llave*mult;
-  return {t,hab,habNeto,circ,nohab,total:hab+nohab,programa,mult,
-    lo:base*CAT.banda.lo,hi:base*CAT.banda.hi,
+  /* habLo/habHi = el rango de 10% que ve el cliente. El precio del correo se
+     calcula del piso al techo de ESE rango, no de un número solo. */
+  const habLo=hab, habHi=habBase+amplMargen(habBase,nAmpl+1);
+  const base=habLo*CAT.precios.llave*mult, baseHi=habHi*CAT.precios.llave*mult;
+  return {t,hab,habBase,habLo,habHi,habNeto,circ,nohab,total:hab+nohab,programa,mult,nAmpl,
+    lo:base*CAT.banda.lo,hi:baseHi*CAT.banda.hi,
     diseno:hab*CAT.precios.diseno*mult,ejecutivo:hab*CAT.precios.ejecutivo*mult};
 }
 const tpl=(s,o)=>String(s||"").replace(/\{(\w+)\}/g,(_,k)=>o[k]!=null?o[k]:"");
@@ -1073,8 +1102,8 @@ function livebar(){
      adelante siempre se muestra (el tamaño ya lo decide la amplitud, no el carácter). */
   const mostrarM2=!!S.nivel||pActual()>=5;
   /* granularidad de 5 m² (antes 10): cada espacio chico ya mueve el número */
-  const habR=Math.round(c.hab/5)*5, extR=Math.round(c.nohab/5)*5, recN=numRecamaras();
-  m2.textContent=mostrarM2?("≈ "+habR.toLocaleString("es-MX")+" m²"):"≈ —";
+  const habR=r5(c.habLo), extR=r5(c.nohab), recN=numRecamaras();
+  m2.textContent=mostrarM2?("≈ "+m2Rango(c)):"≈ —";
   es.textContent=recN;
   /* indicador de m² EXTERIORES (terraza/jardín/alberca/cochera…): aparece y SIEMPRE
      se mueve al clicar, aunque no cotice — así el click nunca "se siente muerto". */
@@ -1268,7 +1297,7 @@ function revelar(){
   document.getElementById("rEsp").textContent=c.programa.length;
   document.getElementById("rRec").textContent=numRecamaras();
   document.getElementById("rCaracter").textContent=caracter.n;
-  document.getElementById("rM2").textContent="≈ "+(Math.round(c.hab/5)*5).toLocaleString("es-MX")+" m²";
+  document.getElementById("rM2").textContent="≈ "+m2Rango(c);
   /* Resumen CUALITATIVO: devuelve sus elecciones sin cantidades. */
   const extrasNombres=[...S.extras].map(k=>(CAT.espacios[k]||{n:k}).n.toLowerCase());
   const extrasTxt=extrasNombres.length?tpl(TEXTOS.r2_resumen_extras_tpl,{lista:extrasNombres.join(", ")}):"";
@@ -1337,7 +1366,7 @@ function revelar(){
     /* R19: mensaje pre-llenado con el resumen COMPLETO (carácter, estilo,
        recámaras, extras, ≈m², SIN precio) para que Alejandro reciba la selección
        del cliente al instante y puedan empezar a hablar. Editable en TEXTOS. */
-    const m2aprox=(Math.round(c.hab/5)*5).toLocaleString("es-MX");
+    const m2aprox=m2Rango(c).replace(" m²","");
     const exNom=[...S.extras].map(k=>(CAT.espacios[k]||{n:k}).n.toLowerCase());
     const extrasMsg=exNom.length?(", con "+exNom.join(", ")):"";
     const recTxt=numRecamaras()===1?"1 recámara":(numRecamaras()+" recámaras");
@@ -1360,11 +1389,11 @@ function revelar(){
     caracter_display:caracter.n,
     amplitud_display:({optimizada:"Optimizada",comoda:"Cómoda",holgada:"Holgada"}[S.amplitud]||S.amplitud),
     recamaras:numRecamaras(),
-    m2aprox:Math.round(c.hab/5)*5,
+    m2aprox:r5(c.habLo), m2aproxHi:r5(c.habHi), amplPaso:c.nAmpl,
     integrantes:S.integrantes,
     extras:[...S.extras].map(k=>(CAT.espacios[k]||{n:k}).n),
     momentos:S.momentos.filter(i=>MOMENTOS[i]&&!MOMENTOS[i].neutral).map(i=>MOMENTOS[i].n),
-    folio,calculo:{m2hab:c.hab,m2habNeto:c.habNeto,m2circ:c.circ,circPct:CAT.circulacion,total:c.total,rango:[c.lo,c.hi]}};
+    folio,calculo:{m2hab:c.hab,m2habLo:c.habLo,m2habHi:c.habHi,m2habNeto:c.habNeto,m2circ:c.circ,circPct:CAT.circulacion,escalonAmpl:CAT.amplEscalon,pasoAmpl:c.nAmpl,total:c.total,rango:[c.lo,c.hi]}};
   console.log("LEAD AURUM →",folio);  /* sin PII en consola (F1, higiene) */
   if(WEBHOOK_URL){
     /* text/plain evita el preflight CORS que Apps Script no contesta; no-cors + keepalive = fire-and-forget sin frenar el reveal.
@@ -1592,6 +1621,8 @@ function aplicarCatalogo(cat){
   if(num(app.banda_estimacion_baja))CAT.banda.lo=app.banda_estimacion_baja;
   if(num(app.banda_estimacion_alta))CAT.banda.hi=app.banda_estimacion_alta;
   if(num(app.cochera_m2_por_auto))CAT.espacios.cochera.porAuto=app.cochera_m2_por_auto;
+  /* escalón y rango de la amplitud, editables sin tocar código */
+  if(num(app.amplitud_escalon))CAT.amplEscalon=app.amplitud_escalon;
   /* % de circulación vivo: si el .gs lo trae (lo que confirme Mariana),
      pisa el default 0.12 embebido — una sola fuente por capa. */
   if(num(app.circulacion))CAT.circulacion=app.circulacion;
