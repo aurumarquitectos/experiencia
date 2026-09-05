@@ -606,7 +606,7 @@ const TEXTOS = {
   sens_sub_full:"Tus 3 · toca una para cambiarla.",
   sens_sub_n_tpl:"Elegiste {n} de 3.",
   sens_min:"Elige al menos una para seguir.",
-  paso_tpl:"Paso {n} de 6", paso_casi:"Casi listo — solo tus datos",
+  paso_tpl:"Paso {n} de 8", paso_casi:"Casi listo — solo tus datos",
   paso_ultimo:"Último paso: elige tu sesión",
   lb_lab_res:"Tu residencia", lb_lab_res_tpl:"Tu residencia · {caracter}",
   hogar_ver:"Ajustar cada integrante ▾", hogar_ocultar:"Ocultar integrantes ▴",
@@ -1159,7 +1159,7 @@ function ir(p){
   const prog=document.getElementById("progress");
   prog.innerHTML=Array.from({length:TOTAL_P},(_,i)=>`<span class="${i<p?'on':''}"></span>`).join("");  /* i<p: la pantalla p enciende p puntos (p1=1/8 … p8=8/8) */
   const pt=document.getElementById("pasoTxt");
-  if(pt)pt.textContent=p===8?(TEXTOS.paso_ultimo||"Último paso: elige tu sesión"):p===7?(TEXTOS.paso_casi||"Casi listo — solo tus datos"):(p>0?rellenarTpl(TEXTOS.paso_tpl||"Paso {n} de 6",{n:p}):"");
+  if(pt)pt.textContent=p===8?(TEXTOS.paso_ultimo||"Último paso: elige tu sesión"):p===7?(TEXTOS.paso_casi||"Casi listo — solo tus datos"):(p>0?rellenarTpl(TEXTOS.paso_tpl||"Paso {n} de 8",{n:p}):"");
   /* sticky "Elegir mi horario": ocupa el slot de la livebar en p8 y se
      oculta cuando el calendario entra al viewport (no tapar el confirmar) */
   const st=document.getElementById("stickyAgenda");
