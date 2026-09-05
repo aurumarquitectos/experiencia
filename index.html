@@ -870,6 +870,9 @@ function amplPaso(){const i=AMPL_ORDEN[S.amplitud];return i==null?1:i;}
    fórmula para el piso y para el techo, así el techo de un escalón es
    exactamente el piso del siguiente y los rangos nunca se traslapan. */
 function amplMargen(base,n){return Math.round(base*(Math.pow(1+CAT.amplEscalon,n)-1));}
+/* m2 de un espacio ya con el escalon de amplitud puesto, para que la etiqueta
+   de la tarjeta diga lo mismo que suma la barra. */
+function conAmplitud(m2){return m2+amplMargen(m2,amplPaso());}
 const r5=n=>Math.round(n/5)*5;
 /* "≈ 97 – 107 m²" (o un solo número si el rango colapsa al redondear a 5) */
 function m2Rango(c){const a=r5(c.habLo),b=r5(c.habHi);
@@ -923,6 +926,12 @@ function calcular(){
   const habBase=hab, nAmpl=amplPaso();
   const margen=amplMargen(habBase,nAmpl);
   if(margen>0){hab+=margen;programa.push(["Holgura de amplitud (+"+Math.round((Math.pow(1+CAT.amplEscalon,nAmpl)-1)*100)+"%)",margen,true]);}
+  /* El escalon de amplitud tambien crece los espacios exteriores elegidos
+     (alberca, terraza, jardin...): si no, "Holgada" daba la misma alberca de
+     9 m2 que "Optimizada" y la palabra dejaba de significar algo. La cochera
+     queda fuera: es por auto, no por holgura. */
+  const margenExt=amplMargen(nohab,nAmpl);
+  if(margenExt>0){nohab+=margenExt;programa.push(["Holgura de amplitud en exteriores",margenExt,false]);}
   const coch=S.autos*CAT.espacios.cochera.porAuto;
   nohab+=coch;programa.push(["Cochera ("+S.autos+" veh)",coch,false]);
   const sumP=programa.reduce((a,r)=>a+r[1],0);
@@ -1019,7 +1028,11 @@ function renderAmplitud(){
       <span class="ampl-n">${o[1]}</span><span class="ampl-d">${o[2]}</span>
     </button>`).join("");
 }
-function setAmplitud(a){S.amplitud=a;renderAmplitud();livebar();pulsoLivebar();guardarS();}
+function setAmplitud(a){S.amplitud=a;
+  /* render() completo: las tarjetas de extras muestran sus m2 ya con el escalon
+     de amplitud, asi que si no se vuelven a dibujar se quedan con la cifra del
+     escalon anterior y la etiqueta deja de coincidir con la barra. */
+  render();livebar();pulsoLivebar();guardarS();}
 
 /* Persistencia ligera: si recarga, no pierde sus elecciones (los datos del
    gate no se guardan hasta que él los escribe; solo elecciones de diseño). */
@@ -1093,7 +1106,7 @@ function render(){
     const e=CAT.espacios[k];
     return `<div class="card ${S.extras.has(k)?'sel':''}" onclick="togExtra('${k}')">
       <div class="body" style="padding:18px 16px;"><h3>${e.n}</h3>
-      <span class="m2tag">+${e.m2[t]+(e.extras?e.extras[t]:0)} m²${e.hab?'':' ext.'}</span></div></div>`;
+      <span class="m2tag">+${conAmplitud(e.m2[t]+(e.extras?e.extras[t]:0))} m²${e.hab?'':' ext.'}</span></div></div>`;
   }).join("");
   if(!window.__verMas&&EXTRAS_UI.length>N_EXTRAS_INI){
     htmlExtras+=`<div class="card card-vermas" onclick="verMasExtras()"><div class="body" style="padding:18px 16px;text-align:center;"><h3>+ Ver más espacios</h3><span class="m2tag">${EXTRAS_UI.length-N_EXTRAS_INI} más</span></div></div>`;
