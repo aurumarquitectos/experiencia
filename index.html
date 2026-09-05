@@ -444,8 +444,8 @@
     <h2 data-txt="gate_titulo">Hemos calculado tu proyecto con el <em>catálogo oficial Aurum</em>.</h2>
     <p class="sub" data-txt="gate_sub3">Un solo dato y ves tu residencia al instante. Tu estimado —lo revisa un arquitecto, no un algoritmo— te llega a tu WhatsApp o correo.</p>
     <div class="gate">
-      <input type="text" id="gNombre" data-ph="gate_ph_nombre" placeholder="Tu nombre">
-      <input type="tel" id="gContact" inputmode="tel" data-ph="gate_ph_whats" placeholder="Tu WhatsApp">
+      <input type="text" id="gNombre" autocomplete="name" data-ph="gate_ph_nombre" placeholder="Tu nombre">
+      <input type="tel" id="gContact" inputmode="tel" autocomplete="tel" data-ph="gate_ph_whats" placeholder="Tu WhatsApp">
       <button type="button" class="gate-toggle" id="gateToggle" onclick="toggleContacto()"data-txt="gate_correo_btn">Prefiero por correo →</button>
       <p class="candado" id="gateMsg" style="display:none;color:#a05252;" data-txt="gate_datos_sub">Déjanos tu nombre y tu WhatsApp (o correo) para enviarte tu estimado.</p>
       <p class="candado" data-txt="gate_compromiso" style="margin-bottom:10px;">Ya hiciste tus elecciones — verlas toma 10 segundos.</p>
@@ -1281,11 +1281,11 @@ function toggleContacto(){
   const inp=document.getElementById("gContact"),tg=document.getElementById("gateToggle");
   if(!inp)return;
   if((S.contactoTipo||"whatsapp")==="whatsapp"){
-    S.contactoTipo="correo";inp.type="email";inp.setAttribute("inputmode","email");
+    S.contactoTipo="correo";inp.type="email";inp.setAttribute("inputmode","email");inp.setAttribute("autocomplete","email");
     inp.placeholder=TEXTOS.gate_ph_correo||"Tu correo";
     if(tg)tg.textContent=TEXTOS.gate_toggle_whats||"Prefiero por WhatsApp →";
   }else{
-    S.contactoTipo="whatsapp";inp.type="tel";inp.setAttribute("inputmode","tel");
+    S.contactoTipo="whatsapp";inp.type="tel";inp.setAttribute("inputmode","tel");inp.setAttribute("autocomplete","tel");
     inp.placeholder=TEXTOS.gate_ph_whats||"Tu WhatsApp";
     if(tg)tg.textContent=TEXTOS.gate_toggle_correo||"Prefiero por correo →";
   }
