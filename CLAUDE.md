@@ -24,6 +24,17 @@ Web app de captación de leads para **Aurum Arquitectos** (Hermosillo, Sonora; d
 - `docs/tarea-programada-qaa.md` — la tarea automatizada diaria que hoy procesa el Google Form viejo.
 - `docs/webhook-apps-script.gs` — Apps Script central (Web App único): GET ?recurso=catalogo sirve el catálogo vivo parseado directo de las hojas de Alejandro (VIVIENDA NUEVA + ANÁLISIS OBRA NUEVA); GET ?recurso=textos sirve los textos de la pestaña "TEXTOS WEB" (clave/valor); POST hace UPSERT por email del lead en "LEADS - WEB" del "CRM - YOD"; además regenera a diario el aurum-catalogo.json de Drive. `sembrarTextos()` crea/rellena la pestaña de textos. Instrucciones de despliegue en el propio archivo.
 
+## El tráfico llega por una liga corta (8-sep-2026)
+La liga medible de 96 caracteres no cabía en el bio de Instagram (queja de Sayri), así que ahora la mayoría del tráfico entra por un **acortador que vive en el otro repo**: `aurumarquitectos.github.io/r/` (carpeta `public/r/` del repo `aurumarquitectos.github.io`). Rebota hasta aquí armando las mismas UTM, y de paso mide canales que antes caían en "(directo)": QR impreso, WhatsApp, correo, TikTok.
+
+**Lo que eso obliga en `capturarOrigen()` (F1.1) — no deshacerlo:**
+- El salto borra el origen real: tras un `location.replace`, `document.referrer` diría "aurumarquitectos.github.io" en vez de instagram.com. El acortador manda el origen verdadero en el parámetro **`ro`** y aquí se prefiere cuando el referrer viene de `/r/`.
+- **Si no llega `ro`, el referrer se guarda VACÍO**, no con la URL del acortador: ese tráfico es directo y así debe contarse. Anotar el propio salto haría pasar nuestra plomería por sitio de referencia y contaminaría "(directo)".
+- La detección busca `"/r/"`, no solo el dominio, para no tocar la navegación interna del cuestionario.
+- El `fbclid` viaja propagado por el acortador; sin él se rompe el match del Pixel.
+
+Antes de tocar ese bloque: `node tests/liga-corta/correr.mjs` en el repo `aurumarquitectos.github.io` (70 pruebas; leen este `index.html` de verdad). Memoria [[liga-corta-rebote]].
+
 ## Reglas de negocio INVIOLABLES (del catálogo v11)
 - Los m² de cada espacio salen del catálogo, NUNCA se inventan. Tamaños: chico/mediano/grande.
 - Tamaño default por terreno: <500 chico · 500–800 mediano · >800 grande. Override por nivel de lujo: Acogedora/Casual→chico, Elegante→mediano, Lujo→grande.
