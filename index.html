@@ -1534,7 +1534,15 @@ function capturarOrigen(){
          lead. El rebote manda el origen verdadero en 'ro'; lo preferimos SOLO cuando el
          referrer es de casa, que es la firma de haber pasado por él. */
       const refNav=(document.referrer||"");
-      const refReal=(refNav&&refNav.indexOf(location.host)!==-1&&q.get("ro"))?q.get("ro"):refNav;
+      /* El rebote es plomería, no un origen. Si el visitante vino por él, el
+         origen verdadero llega en 'ro'; y si NO llega es porque no había —
+         alguien tecleó la liga, o la app de turno no manda referrer— o sea
+         tráfico directo. Registrar ahí ".../r/?ig260908" haría pasar nuestra
+         propia plomería por sitio de referencia y ensuciaría "(directo)".
+         Se busca "/r/" y no solo el dominio para no tocar la navegación
+         interna normal del cuestionario. */
+      const porRebote=refNav.indexOf(location.host+"/r/")!==-1;
+      const refReal=porRebote?(q.get("ro")||""):refNav;
       o={utm_source:g("utm_source"),utm_medium:g("utm_medium"),utm_campaign:g("utm_campaign"),
          utm_content:g("utm_content"),utm_term:g("utm_term"),fbclid:g("fbclid"),
          referrer:refReal.slice(0,300),device:tactil?"movil":"escritorio",
