@@ -1528,9 +1528,16 @@ function capturarOrigen(){
       const d=new Date();
       const dias=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
       const tactil=!!(window.matchMedia&&(window.matchMedia("(pointer: coarse)").matches||window.matchMedia("(max-width: 900px)").matches));
+      /* R41: la liga corta (aurumarquitectos.github.io/r/) rebota hasta acá, así que
+         document.referrer diría "aurumarquitectos.github.io" y perderíamos el origen
+         real —instagram.com, facebook.com— justo en el dato que dice de dónde vino el
+         lead. El rebote manda el origen verdadero en 'ro'; lo preferimos SOLO cuando el
+         referrer es de casa, que es la firma de haber pasado por él. */
+      const refNav=(document.referrer||"");
+      const refReal=(refNav&&refNav.indexOf(location.host)!==-1&&q.get("ro"))?q.get("ro"):refNav;
       o={utm_source:g("utm_source"),utm_medium:g("utm_medium"),utm_campaign:g("utm_campaign"),
          utm_content:g("utm_content"),utm_term:g("utm_term"),fbclid:g("fbclid"),
-         referrer:(document.referrer||"").slice(0,300),device:tactil?"movil":"escritorio",
+         referrer:refReal.slice(0,300),device:tactil?"movil":"escritorio",
          hora_local:("0"+d.getHours()).slice(-2)+":"+("0"+d.getMinutes()).slice(-2),
          dia_semana_local:dias[d.getDay()]};
       try{sessionStorage.setItem(KEY,JSON.stringify(o));}catch(e){}
