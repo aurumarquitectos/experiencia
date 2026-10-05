@@ -1,15 +1,5 @@
 # Aurum Experiencia — *Cuestionario de Arquitectura de Autor*
 
-## Flujo vigente desde el 5 de octubre de 2026
-
-La solicitud de aplicar las recomendaciones de conversión sustituye la presentación de ocho pantallas descrita abajo. La portada promete un perfil espacial para la forma de vivir en Hermosillo, explica los seis entregables y ofrece una sesión de claridad directa. Hay seis pasos: estilo, sensaciones, actividades, espacios, terreno/plazo, y lectura inicial con contacto. La confirmación y agenda posterior no es una pregunta adicional.
-
-El resultado cualitativo se entrega antes del formulario. Los detalles de espacios, prioridades y recomendación se pueden desplegar. Nombre y un canal (WhatsApp por defecto, correo alternativo) dan paso al perfil completo con rango de superficie. Amplitud, carácter, niveles y vehículos quedan como ajustes opcionales en espacios. No inferir un nivel de acabados a partir de sensaciones: el cálculo usa su fallback existente cuando no se elige carácter. No se alteraron precios, catálogo, función de cálculo ni captura de atribución.
-
-Los textos nuevos están en `TEXTOS WEB!A224:C323`, con claves `q6_`, y su respaldo está en `TEXTOS`. Siguen gobernados por el Sheet. Se conservan las claves anteriores para otros procesos. La situación de terreno y el plazo viajan como campos nuevos y también en el campo existente `proyecto` para que el CRM los registre sin cambiar Apps Script. El seguimiento y envío de resultados conserva su operación existente.
-
-`tests/cuestionario.cjs` prueba el recorrido y las conexiones con las salidas externas interceptadas. La numeración actual del Pixel lleva `flujo: perfil_6`; para compatibilidad, la actividad al CRM conserva los valores 7 para contacto y 8 para resultado. La sesión directa mide clics y no simula un lead ni una reserva confirmada.
-
 Contexto para Claude Code. Lee este archivo completo antes de tocar nada.
 
 ## Qué es esto
